@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
 import { Link,Outlet } from "react-router-dom";
-import HomePage from '/Users/abraham/projects/online-boock-store/src/components/HomePage.jsx';
+import HomePage from './components/HomePage';
 import { BrowserRouter,Routes,Route } from "react-router-dom";
 import SearchPage from './components/SearchPage'
 import ResponsiveAppBar from './components/AppBar'
