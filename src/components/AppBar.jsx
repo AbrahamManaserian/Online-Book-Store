@@ -21,6 +21,7 @@ import ListButton from './MenuType'
 import {SearchButton} from './SearchButton.jsx'
 import {SearchMenu} from './SearchPage'
 import UserRegisterMenu from './UserRegisterMenu'
+import { useEffect } from 'react';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -81,16 +82,16 @@ const ResponsiveAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const[state,setState] =React.useState(null)
-  React.useEffect(async()=>{
-    const response =await fetch(`https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=Qs9wTvBFVLOAyddOPNIHfEuctrBURUiy`)
-    const body = await response.json()
-    
+  const [state,setState] = React.useState(null)
 
+  useEffect(()=>{
 
-    // console.log(body)
-    setState(body)
+         fetch(`https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=Qs9wTvBFVLOAyddOPNIHfEuctrBURUiy`).then((result)=>{
+             result.json().then(res=>setState(res))
+          }).catch((error)=>console.log(error))
+         
   },[])
+  if(!state || state.fault) return null
   return (
     <AppBar sx={{backgroundColor: teal[900]}} position="sticky">
       <Container maxWidth="xl">

@@ -25,10 +25,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { DryCleaning } from '@mui/icons-material';
+
 
 const asd = require('../images/BookLips.jpeg')
-
-
 
 
 export  function InputPassward(props) {
@@ -119,7 +119,7 @@ export  function LoginMenu(props) {
     }
     
   },[watch('image')])
-  console.log(images)
+  // console.log(images)
   async function handleSignUp (setPhoto) {
     try {
       await createUserWithEmailAndPassword(auth,getValues('regMail'),passward.password)
@@ -145,7 +145,7 @@ export  function LoginMenu(props) {
       // console.log(error.message)
     }
   }
-  console.log(Date.now())
+  // console.log(Date.now())
   
   return (
     <div>

@@ -6,7 +6,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions, Grow } from '@mui/material';
+import { Backdrop, Button, CardActionArea, CardActions, CircularProgress, Grow } from '@mui/material';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -33,13 +33,22 @@ const Img = styled('img')({
 
 
 export function BestSellerNTimes () {
+  
   const [dateState,setDateState] = useState('')
   const[state,setState] = useState(null)
-    useEffect(async ()=>{
-        const response =await fetch(`https://api.nytimes.com/svc/books/v3/lists/full-overview.json?${dateState}api-key=Qs9wTvBFVLOAyddOPNIHfEuctrBURUiy`)
-        const body = await response.json()
-        setState(body)
-        console.log(body)
+  const [openBackdrop,setOpenBackdrop] = useState(true)
+  // console.log(state)
+  useEffect( ()=>{
+      // setOpenBackdrop(true)
+      fetch(`https://api.nytimes.com/svc/books/v3/lists/full-overview.json?${dateState}api-key=Qs9wTvBFVLOAyddOPNIHfEuctrBURUiy`).then((result)=>{
+        result.json().then((res)=>{
+          // console.log(res)
+
+          setState(res)
+          setOpenBackdrop(false)
+        })
+      }).catch((error)=>console.log(error))
+
     },[dateState])
 
     
@@ -80,9 +89,9 @@ export function BestSellerNTimes () {
        setAnchorEl(anchorEl ? null : event.currentTarget);
     };
     const open = Boolean(anchorEl);
-    const id = open ? 'simple-popperNor' : undefined;
+    const id = open ? 'transition-popper' : undefined;
     return (
-     <Box  onMouseEnter={handleClick} onMouseLeave={handleClick} style={{overflow:'hidden'}}>
+     <Box  onClick={handleClick}  >
        <Box  style={{cursor:'pointer'}} aria-describedby={id} type="button">
           <ListItemButton sx={{width:'100%'}}>
                 <ListItemText primary={props.year}/>
@@ -94,7 +103,10 @@ export function BestSellerNTimes () {
             item,index)=>{
               return (
                 <ListItemButton key={index} sx={{height:35}}  onClick={() =>  
-                  props.changeState(`published_date=${props.year}-${index<9?`0${index+1}`:`${index+1}`}-01&`)}>
+                  {
+                    props.changeState(`published_date=${props.year}-${index<9?`0${index+1}`:`${index+1}`}-01&`)
+                    setOpenBackdrop(true)
+                   }}>
                     <ListItemText    primary={item}/>
                 </ListItemButton>
               )
@@ -104,10 +116,22 @@ export function BestSellerNTimes () {
      </Box>
      );
     }
-
-    if(!state) return null
+    if(!state || state.fault) return (
+      <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 3 }}
+            open={openBackdrop}
+         >
+            <CircularProgress color="inherit" />
+        </Backdrop>
+    )
     return(
      <Box  sx={{padding:2}}> 
+         <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 3 }}
+            open={openBackdrop}
+         >
+            <CircularProgress color="inherit" />
+        </Backdrop>
         <Box sx={{display:'flex',justifyContent:'flex-start',p:0}}>
             <Box sx={{flexGrow:2,textAlign:'center',fontSize:{xs:16,sm:20},alignSelf: 'center',paddingBottom:2}}>Discover last 10 years bestsellers </Box>
         </Box>
@@ -142,14 +166,10 @@ export function SaleSlideshow() {
     const delay = 3000;
     const[state,setState] = useState(null)
     useEffect( ()=>{
-      
-      async function anun() {
-        const response =await fetch('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=Qs9wTvBFVLOAyddOPNIHfEuctrBURUiy')
-        const body = await response.json()
-        setState(body)
 
-      }
-      anun()
+        fetch('https://api.nytimes.com/svc/books/v3/lists/full-overview.json?api-key=Qs9wTvBFVLOAyddOPNIHfEuctrBURUiy').then((result)=>{
+          result.json().then((res)=>setState(res))
+        }).catch((error)=>console.log(error))
 
     },[])
     
@@ -243,7 +263,7 @@ export function SaleSlideshow() {
      </Paper>
     );
     }
-    if(!state) return null
+    if(!state || state.fault) return null
     
     return (
       <div className="slideshow">
@@ -303,11 +323,13 @@ export function SaleSlideshow() {
 
 export function GoogleCard (props) {
   const [state,setState] =useState(null)
-  useEffect(async ()=>{
-    const response = await fetch('https://books.googleapis.com/books/v1/volumes?q=bestseller%20books&download=EPUB&maxResults=12')
-    const body = await response.json()
-    setState(body)
-    return null
+  useEffect( ()=>{
+
+    fetch('https://books.googleapis.com/books/v1/volumes?q=bestseller%20books&download=EPUB&maxResults=12').then((result)=>{
+        result.json().then((res)=>setState(res))
+      }).catch((error)=>console.log(error))
+
+   
   },[])
   
   const ExpandMore = styled((props) => {
@@ -378,7 +400,7 @@ export function GoogleCard (props) {
     </Card>
   );
 }
-  if(!state) return null
+  if(!state || state.fault) return null
   return(
     // <Grid container spacing={2}>
       <Box sx={{paddingTop:2}}>

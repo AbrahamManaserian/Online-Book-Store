@@ -22,6 +22,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useEffect } from 'react';
 
 export  function SearchMenu() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -453,17 +454,17 @@ export function SearchView (props) {
     }
    
 
-    React.useEffect(async()=>{
+    useEffect(()=>{
+
         if(responseObject.years.length>0) {
-            const response =await fetch(`https://api.nytimes.com/svc/books/v3/lists/full-overview.json?published_date=${responseObject.years[0]}-01-01&api-key=Qs9wTvBFVLOAyddOPNIHfEuctrBURUiy`)
-            const body = await response.json()
-            setStateSearch(body)
-            // console.log(body)
+           fetch(`https://api.nytimes.com/svc/books/v3/lists/full-overview.json?published_date=${responseObject.years[0]}-01-01&api-key=Qs9wTvBFVLOAyddOPNIHfEuctrBURUiy`).then((result)=>{
+               result.json().then(res=>setStateSearch(res))
+           })
         }
       },[urlState])
 
-      console.log(objectSearch)
-      console.log(responseObject)
+    //   console.log(objectSearch)
+    //   console.log(responseObject)
     // console.log(stateSearch?.results.lists[0].books[0].book_image)
    
     if(!stateSearch) {

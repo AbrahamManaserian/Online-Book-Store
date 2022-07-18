@@ -17,6 +17,7 @@ import {AdvertisingCard} from './BookCards.jsx'
 import {MonthPoper} from './MenuType.jsx'
 import { Link, Outlet } from "react-router-dom";
 import UserRegisterMenu from './UserRegisterMenu';
+import { ReactComponent as English } from "../../node_modules/language-icons/icons/en.svg"
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -34,7 +35,8 @@ const delay = 2500;
 export default function HomePage () {
     return (
         <Box>
-          <ResponsiveAppBar/> 
+          <ResponsiveAppBar/>
+          <English/> 
           <Grid container spacing={1}  sx={{paddingTop:2,}} >
             <Grid item sm={4} md={2.5}  sx={{display: { xs: 'none', sm: 'block' }}} >
                  <GoogleCard></GoogleCard>
